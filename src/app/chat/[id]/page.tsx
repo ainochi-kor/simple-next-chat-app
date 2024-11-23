@@ -2,11 +2,12 @@
 
 import BottomBar from "@/components/BottomBar";
 import SideBar from "@/components/SideBar";
+import TopBar from "@/components/TopBar";
 import { auth, db } from "@/firebase";
 import { User } from "firebase/auth";
 import { collection, doc, orderBy, query } from "firebase/firestore";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useCollectionData,
@@ -30,6 +31,13 @@ const ChatPage: React.FC = () => {
 
   const [userMe] = useAuthState(auth);
 
+  const otherUser = useMemo(() => {
+    if (!chat) return null;
+    return (chat?.usersData as User[]).filter(
+      (user) => user.email !== userMe?.email
+    )[0];
+  }, [chat, userMe]);
+
   return (
     <main className="grid w-full grid-cols-8">
       <div className="col-span-2">
@@ -37,9 +45,9 @@ const ChatPage: React.FC = () => {
       </div>
       <div className="flex flex-col w-full col-span-6">
         {/* Top bar  */}
-        Top bar
+        <TopBar user={otherUser} />
         <div className="flex w-full h-full px-6 pt-4 mb-2 overflow-y-scroll no-scrollbar">
-          <div className="flex flex-col w-full h-full ">
+          <div className="flex flex-col w-full h-full">
             {/* Messages */}
             {loading && (
               <div className="flex flex-col w-full h-full">
