@@ -3,7 +3,6 @@
 import { db } from "@/firebase";
 import { User } from "firebase/auth";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import React, { startTransition, useState } from "react";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 
 interface BottomBarProps {
@@ -15,19 +14,20 @@ const BottomBar: React.FC<BottomBarProps> = ({
   chatId,
   user,
 }: BottomBarProps) => {
-  const [input, setInput] = useState("");
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (input.trim().length === 0) return;
-    const text = input.trim();
+    const message = e.currentTarget.message;
+
+    if (message.value.trim().length === 0) return;
     await addDoc(collection(db, `chats/${chatId}/messages`), {
-      text,
+      text: message.value,
       sender: user.email,
       photoURL: user.photoURL,
       timestamp: serverTimestamp(),
     });
+
+    message.value = "";
   };
 
   return (
@@ -38,10 +38,10 @@ const BottomBar: React.FC<BottomBarProps> = ({
       >
         <input
           type="text"
+          name="message"
           placeholder="메시지를 입력하세요."
           className="w-full px-4 py-4 placeholder-gray-400 border border-gray-200 rounded-lg focus:border-gray-400"
-          value={input}
-          onChange={(e) => startTransition(() => setInput(e.target.value))}
+          maxLength={256}
         />
         <button>
           <IoPaperPlaneOutline className="mb-4 text-gray-600 w-7 h-7 hover:text-gray-900" />
