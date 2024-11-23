@@ -73,7 +73,7 @@ const UserListItem = ({
         `}
         onClick={handleClick}
       >
-        <div>
+        <div className="">
           <Image
             src={reveiver.photoURL!}
             alt={reveiver.displayName!}
@@ -82,9 +82,7 @@ const UserListItem = ({
             className="rounded-full"
           />
         </div>
-        <div className="ml-4">
-          <p>{reveiver.displayName}</p>
-        </div>
+        <p className="ml-4 truncate">{reveiver.displayName}</p>
       </div>
     </div>
   );

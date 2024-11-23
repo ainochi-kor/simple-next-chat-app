@@ -2,15 +2,14 @@
 
 import SideBar from "@/components/SideBar";
 import { IoChatbubbleOutline } from "react-icons/io5";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "@/firebase";
+import { db } from "@/firebase";
 import { CgSpinner } from "react-icons/cg";
-import Login from "@/components/Login";
 import { useEffect } from "react";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import useAuth from "@/hooks/useAuth";
 
 export default function Home() {
-  const [user, loading] = useAuthState(auth);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -34,10 +33,6 @@ export default function Home() {
         <CgSpinner className="animate-spin w-20 h-10" />
       </div>
     );
-  }
-
-  if (!user) {
-    return <Login />;
   }
 
   return (

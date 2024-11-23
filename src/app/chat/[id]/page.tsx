@@ -4,13 +4,13 @@ import BottomBar from "@/components/BottomBar";
 import MessageBubble from "@/components/MessageBubble";
 import SideBar from "@/components/SideBar";
 import TopBar from "@/components/TopBar";
-import { auth, db } from "@/firebase";
+import { db } from "@/firebase";
+import useAuth from "@/hooks/useAuth";
 import { IMessage } from "@/types";
 import { User } from "firebase/auth";
 import { collection, doc, orderBy, query } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useCollectionData,
   useDocumentData,
@@ -19,6 +19,8 @@ import { CgSpinner } from "react-icons/cg";
 import { IoChatbubblesOutline } from "react-icons/io5";
 
 const ChatPage: React.FC = () => {
+  const { user: userMe } = useAuth();
+
   const { id } = useParams<{
     id: string;
   }>();
@@ -29,7 +31,6 @@ const ChatPage: React.FC = () => {
 
   const [messages, loading] = useCollectionData(chatQuery);
   const [chat] = useDocumentData(doc(db, "chats", id));
-  const [userMe] = useAuthState(auth);
   const messageBottomRef = useRef<HTMLDivElement>(null);
 
   const otherUser = useMemo(() => {

@@ -11,7 +11,7 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ user, message }) => {
-  const isSenderMe = message.sender === user.email;
+  const isSenderMe = message.sender === user?.email;
 
   return (
     <div
